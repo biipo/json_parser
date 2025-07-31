@@ -41,7 +41,7 @@ public:
 	list_iterator end_list();// not t
 	const_list_iterator end_list() const;// not tested
 
-	dictionary_iterator begin_dictionar();
+	dictionary_iterator begin_dictionary();
 	const_dictionary_iterator begin_dictionary() const;// not tested
 	dictionary_iterator end_dictionary();// not tested
 	const_dictionary_iterator end_dictionary() const;// not tested
@@ -58,6 +58,7 @@ bool const& get_bool() const;// not tested
 	void set_string (std::string const&);
 
 	void set_number(double);
+    void set_bool(bool);
 	void set_null();
 	void set_list();
 	void set_dictionary();

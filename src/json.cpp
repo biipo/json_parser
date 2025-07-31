@@ -23,17 +23,17 @@ typedef dictionary* dict_ptr;
 
 
 struct json::impl{
-	data data_type;
+	data data_type {Null};
 
-	double n;
-	bool b;
-	std::string string;
+	double n {0.0};
+	bool b {false};
+	std::string string {nullptr};
 
-	list_ptr l_head;
-	list_ptr l_tail;
+	list_ptr l_head {nullptr};
+	list_ptr l_tail {nullptr};
 	
-	dict_ptr d_head;
-	dict_ptr d_tail;
+	dict_ptr d_head {nullptr};
+	dict_ptr d_tail {nullptr};
 
 	list_ptr list_copy(const list_ptr& j_head);
 	dict_ptr dict_copy(const dict_ptr& j_head);
@@ -44,12 +44,13 @@ struct json::impl{
 
 
 // The default constructor set the object to null
-json::json() : pimpl(new impl){
-	pimpl->data_type = Null;
-	pimpl->n = 0.0;
-	pimpl->b = false;
-	pimpl->l_head = pimpl->l_tail = nullptr;
-	pimpl->d_head = pimpl->d_tail = nullptr;
+json::json()
+    : pimpl(new impl) {
+	//pimpl->data_type = Null;
+	//pimpl->n = 0.0;
+	//pimpl->b = false;
+	//pimpl->l_head = pimpl->l_tail = nullptr;
+	//pimpl->d_head = pimpl->d_tail = nullptr;
 }
 
 json::json(json const& j) : pimpl(new impl) {
@@ -495,7 +496,7 @@ const std::string& json::get_string() const{
 		throw json_exception {"You're trying to get a non-string (const)"};
 	}
 }
-/*AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*/
+
 void json::impl::delete_all(){
 	if(data_type == List){
 		delete_rec_list(l_head);
@@ -528,7 +529,6 @@ void json::impl::delete_rec_dict(dict_ptr& d){
 		d = nullptr;
 	}
 }
-/*AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*/
 
 void json::set_string(const std::string& str){
 	pimpl->delete_all();
@@ -622,7 +622,7 @@ std::istream& operator>>(std::istream& lhs, json& rhs){
 			rhs.set_number(num);
 		}
 		else if(c == '"'){
-			c = lhs.get();
+			c = static_cast<char>(lhs.get());
 			char prev = 0;// keep the 'prev' char one char berfore 'curr' in the input stream
 			std::string s;
 			bool stop = false;
@@ -633,12 +633,12 @@ std::istream& operator>>(std::istream& lhs, json& rhs){
 					}else{
 						s.push_back(c);
 						prev = c;
-						c = lhs.get();
+						c = static_cast<char>(lhs.get());
 					}
 				}else{
 					s.push_back(c);
 					prev = c;
-					c = lhs.get();
+					c = static_cast<char>(lhs.get());
 				}
 			}
 			rhs.set_string(s);
@@ -649,7 +649,7 @@ std::istream& operator>>(std::istream& lhs, json& rhs){
 				lhs.putback(c);
 				int i = 0;
 				while(i < 4){
-					boolean += lhs.get();
+					boolean += static_cast<char>(lhs.get());
 					i++;
 				}
 			}
@@ -657,7 +657,7 @@ std::istream& operator>>(std::istream& lhs, json& rhs){
 				lhs.putback(c);
 				int i = 0;
 				while(i < 5){
-					boolean += lhs.get();
+					boolean += static_cast<char>(lhs.get());
 					i++;
 				}
 			}
@@ -748,7 +748,7 @@ void D(std::istream& lhs, json& rhs){
 	lhs >> c;
 	if(c == '"'){
 		char prev = 0;// keep the 'prev' char one char berfore 'curr' in the input stream
-		c = lhs.get();
+		c = static_cast<char>(lhs.get());
 		bool stop = false;
 		while(!stop){
 			if(c == '"'){
@@ -757,12 +757,12 @@ void D(std::istream& lhs, json& rhs){
 				}else{
 					pa.first.push_back(c);
 					prev = c;
-					c = lhs.get();
+					c = static_cast<char>(lhs.get());
 				}
 			}else{
 				pa.first.push_back(c);
 				prev = c;
-				c = lhs.get();
+				c = static_cast<char>(lhs.get());
 			}
 		}
 		lhs >> c;

@@ -1,18 +1,25 @@
-OPTIONS=-O3 -DNDEBUG -Wall -Wextra
+CXX = g++
+CXXFLAGS = -pedantic-errors -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -I include/
 
-all:test
+PROD = -O3
 
-sanitiezers: OPTIONS=-fsanitize=address and -fno-omit-frame-pointer -g -DDEBUG -Wall -Wextra
-sanitiezers:test
+ASAN_FLAGS = -fsanitize=address -O1 -fno-omit-frame-pointer -Wno-format-security
 
-debug: OPTIONS=-O0 -g -DDEBUG -Wall -Wextra
-debug:test
+DEBUG = -O0 -g -DDEBUG -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -pedantic-errors -I include/
 
-test: json.o main.cpp
-	g++ ${OPTIONS} main.cpp -o test
+all: main
 
-json.o:	json.cpp json.hpp
-	g++ ${OPTIONS} -c json.cpp -o json.o 
+main: src/main.cpp json
+	$(CXX) $(CXXFLAGS) src/main.cpp build/json.o -o build/main 
+
+sanitize: src/json.cpp include/json.hpp
+	$(CXX) $(DEBUG) $(ASAN_FLAGS) -c src/json.cpp -o build/json.o
+
+debug: src/json.cpp include/json.hpp
+	$(CXX) $(DEBUG) -c src/json.cpp -o build/json.o
+
+json: src/json.cpp include/json.hpp
+	$(CXX) $(CXXFLAGS) -c src/json.cpp -o build/json.o 
 
 clean:
-	rm -rf *.o test out.json
+	rm -rf build/*
