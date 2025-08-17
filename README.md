@@ -1,9 +1,4 @@
 # A JSON parser in C++
 
-That's my first project.
-
-## TODO
-
-- Refactor
-- Enhance parsing process
-- Fix bug with dictionaries that gives *seg fault*
+That's my first project in C++ and second project I've ever done.
+It was developed for educational purposes, so it should be taken as is.
